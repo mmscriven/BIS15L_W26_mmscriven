@@ -80,7 +80,7 @@ mountains <- read.csv("mountains_data.csv")
 
 **10. Use a summary function of your choice to show the structure of your `mountains` data frame.**
 ```{r}
-
+str(mountains)
 ```
 
 ## Knit and Upload
