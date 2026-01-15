@@ -79,7 +79,6 @@ ggplot(data=msleep, mapping=aes(x=brainwt,y=bodywt))+
   geom_smooth(method=lm)+
   labs(title="Brain weight vs body weight",x="Brain weight",y="Body weight")+
   xlim(0, 1.5) + ylim(0, 750)
-  scale_y_log10()
 ```
 There is a positive relationship between brain weight and body weight.
 **10. Build one plot of your choice that provides additional insight into the msleep dataset. Be sure to include appropriate labels and a title.**
@@ -88,7 +87,7 @@ ggplot(data=msleep, mapping=aes(x=brainwt,y=sleep_total))+
   geom_point()+
   geom_smooth(method=lm)+
   labs(title="Sleep total by brain weight",x="Brain weight",y="Sleep total")+
-    xlim(0, 1.5) + ylim(0, 24)
+    coord_cartesian(xlim=c((0, 1.5)), ylim=c((0, 24)))
 
 ```
 
