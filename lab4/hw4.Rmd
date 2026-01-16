@@ -64,7 +64,7 @@ ggplot(data=msleep, mapping=aes(x=bodywt,y=sleep_total))+
   labs(title="Body weight vs. total sleep time",x="Body weight",y="Total sleep time")+
   scale_x_log10()
 ```
-
+There is a negative relationship between body weight and sleep time (as body weight inc, sleep time dec)
 **8. Which vore type tends to sleep the most? Build a plot to support your answer.**
 ```{r}
 ggplot(data=msleep, mapping=aes(x=vore,y=sleep_total))+
@@ -87,7 +87,7 @@ ggplot(data=msleep, mapping=aes(x=brainwt,y=sleep_total))+
   geom_point()+
   geom_smooth(method=lm)+
   labs(title="Sleep total by brain weight",x="Brain weight",y="Sleep total")+
-    coord_cartesian(xlim=c((0, 1.5)), ylim=c((0, 24)))
+    coord_cartesian(xlim=c(0, .75), ylim=c(0, 24))
 
 ```
 
