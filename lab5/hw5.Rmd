@@ -63,14 +63,14 @@ homerange %>%
 homerange %>% 
   select(species, mean.hra.m2) %>% 
   slice_max(mean.hra.m2, n=1)
+```
+
+```{r}
 homerange %>% 
   select(species, mean.hra.m2) %>% 
   slice_min(mean.hra.m2, n=1)
 ```
 smallest: hipoliti, largest: tarandus
-```{r}
-
-```
 
 **7. Which carnivorous mammals have the largest homeranges?**
 ```{r}
@@ -81,18 +81,35 @@ homerange %>%
 
 **8. Is there a relationship between body mass and homerange size? Make a scatterplot to show this relationship. Be sure to include appropriate labels and a title.**
 ```{r}
-
+ggplot(data=homerange, mapping= aes(x=mean.mass.g,y=mean.hra.m2))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(title="Body size vs homerange size",x="Body Mass (g)",y="Home range area (m2)")
 ```
 
 **9. Use filter to extract the data for only birds and mammals. Then make a plot that compares the homerange sizes of these two groups. Be sure to include appropriate labels and a title.**
 ```{r}
+birds_mammals <- homerange %>% 
+  filter(class=="mammalia" | class=="aves")
 
+ggplot(data=birds_mammals, mapping=aes(x=class, y=mean.hra.m2))+
+  geom_boxplot()+
+  labs(title="Homerange size mammals vs birds",x="Class",y="Mean home range area (m2)")+
+  scale_y_log10()
 ```
 
 **10. Do one additional exploratory analysis of your choice. Before writing the code, write the question you are trying to answer. The question should be biologically meaningful and appropriate for the data. It must include at least one `filter()`, `select()`, and `arrange()`.**
+Do aquatic or terrestrial animals have larger home ranges?
 ```{r}
-
+realm <- homerange %>% 
+  select(realm, mean.hra.m2) %>% 
+  arrange(mean.hra.m2)
+realm
+ggplot(data=realm, mapping=aes(x=realm, y=mean.hra.m2))+
+  geom_boxplot()+
+  scale_y_log10()+
+  labs(title="Mean home range area by realm",x="Realm",y="Mean home range area (m2)")
 ```
-
+Terrestrial have larger home ranges, on average
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
