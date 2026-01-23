@@ -34,23 +34,25 @@ glimpse(gabon)
 **3. Clean the data as necessary following the conventions from lab 6.**
 ```{r}
 gabon <- clean_names(gabon) %>% 
-  mutate(across(where(is.character), tolower))
-  
+  mutate(across(where(is.character), tolower)) %>% 
+  mutate(across(where(is.numeric),~ifelse(. == -999.00, NA, .)))
 ```
 
 ```{r}
-gabon
+glimpse(gabon)
 ```
 
 **4. Use `mutate()` Change the variables `HuntCat`, `LandUse`, and `TransectID` to factors. Be sure to store the output as a new dataframe and use it for the remaining questions.**
 ```{r}
 gabon <- mutate(gabon, hunt_cat=as.factor(hunt_cat), land_use=as.factor(land_use), transect_id=as.factor(transect_id))
-gabon
+glimpse(gabon)
 ```
 
 **5. Make a plot that shows the number of transects for each land use type.**
 ```{r}
-
+ggplot(data=gabon, mapping=aes(x=land_use))+
+  geom_bar(fill="pink")+
+  labs(title="Number of transects for each land use type",x="Land use type")
 ```
 
 ```{r}
@@ -59,34 +61,48 @@ gabon
 
 **6. How does vegetation richness compare among land use types?**
 ```{r}
-
+ggplot(data=gabon, mapping=aes(x=land_use,y=veg_rich))+
+  geom_boxplot(fill="pink")+
+  labs(title="Vegetation richness for land use types",x="Land use types",y="Vegetation richness")
 ```
 
 **7. For which land use type (national parks, logging, or neither) is average all species diversity the greatest?**
 ```{r}
-
+ggplot(data=gabon, mapping=aes(x=land_use,y=diversity_all_species))+
+  geom_boxplot(fill="lightblue")+
+  labs(title="All species diversity per land use type",x="Land use type",y="All species diversity")
+```
+Park
+```{r}
+gabon_park <- gabon %>% 
+  filter(land_use=="park")
+mean(gabon_park$diversity_all_species)
 ```
 
 ```{r}
-
+gabon_log <- gabon %>% 
+  filter(land_use=="logging")
+mean(gabon_log$diversity_all_species)
 ```
 
 ```{r}
-
-```
-
-```{r}
-
+gabon_neither <- gabon %>% 
+  filter(land_use=="neither")
+mean(gabon_neither$diversity_all_species)
 ```
 
 **8. Is there a relationship between vegetation richness and mammal species richness?**
 ```{r}
-
+ggplot(data=gabon, mapping=aes(x=veg_rich,y=rich_mammal_species))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  labs(title="Vegetation richness vs mammal richness",x="Vegetation richness",y="Mammal species richness")
 ```
-
+weak, positive correlation
 **9. Use `filter` to find all transects that have greater than 15 tree species or a breast height diameter between 50 and 60cm.  **
 ```{r}
-
+gabon %>% 
+  filter(veg_rich>15 | (veg_dbh>50 & veg_dbh<60))
 ```
 
 ```{r}
@@ -95,7 +111,10 @@ gabon
 
 **10.Which transects and land use types have more than 10 tree species and 10 mammal species? Use `arrange()` to sort by the number of tree species.**
 ```{r}
-
+gabon %>% 
+  select(transect_id, land_use, rich_mammal_species, veg_rich) %>% 
+  filter(veg_rich>10, rich_mammal_species>10) %>% 
+  arrange(veg_rich)
 ```
 
 ## Knit and Upload

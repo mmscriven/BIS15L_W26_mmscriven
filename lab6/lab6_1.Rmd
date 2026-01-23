@@ -196,8 +196,15 @@ mammals_w_na <- mammals %>%
 
 ```{r}
 mammals <- mammals %>% 
-  mutate(across(where(is.numeric))=ifelse(. == -999.00, NA, .))
+  mutate(across(where(is.numeric),~ifelse(. == -999.00, NA, .)))
+mammals
 ```
+
+```{r}
+mammals <- mammals %>% 
+  mutate(across(c(mass, gestation, newborn, weaning),~ifelse(. == -999.00, NA, .)))
+```
+
 
 2. In the mammals data, make a new column `mass_kg` that that converts mass from grams to kilograms. Select the columns genus, species, mass, and mass_kg, and arrange the data by mass_kg in descending order. What is the common name for the species with the highest mass?  
 ```{r}
