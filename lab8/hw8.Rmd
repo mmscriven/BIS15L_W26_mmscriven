@@ -1,0 +1,148 @@
+---
+title: "Homework 8"
+author: "McKenzie Scriven"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    theme: spacelab
+    keep_md: yes
+---
+
+## Instructions
+Answer the following questions and/or complete the exercises in RMarkdown. Please embed all of your code and push the final work to your repository. Your report should be organized, clean, and run free from errors. Remember, you must remove the `#` for any included code chunks to run.  
+
+## Load the libraries
+```{r message=FALSE, warning=FALSE}
+library("tidyverse")
+library("janitor")
+library("naniar")
+options(scipen = 999)
+```
+
+## About the Data
+For this assignment we are going to work with a data set from the [United Nations Food and Agriculture Organization](https://www.fao.org/fishery/en/collection/capture) on world fisheries. These data were downloaded and cleaned using the `fisheries_clean.Rmd` script.  
+
+Load the data `fisheries_clean.csv` as a new object titled `fisheries_clean`.
+```{r message=FALSE, warning=FALSE}
+fisheries_clean <- read_csv("data/fisheries_clean.csv")
+```
+
+1. Explore the data. What are the names of the variables, what are the dimensions, are there any NA's, what are the classes of the variables, etc.? You may use the functions that you prefer.
+```{r}
+glimpse(fisheries_clean)
+summary(fisheries_clean)
+
+```
+
+Variables: period, continent, geo_region, country, scientific_name, common_name, taxonomic_code, catch, status. 
+1055015 rows 9 columns. 
+Yes NA, although summary functions don't show it. 
+Character and double-precision floating point variables. 
+
+2. Convert the following variables to factors: `period`, `continent`, `geo_region`, `country`, `scientific_name`, `common_name`, `taxonomic_code`, and `status`.
+```{r}
+fisheries_clean <- fisheries_clean %>% 
+  mutate(period=as.factor(period),
+         continent=as.factor(continent),
+         geo_region=as.factor(geo_region),
+         country=as.factor(country), 
+         scientific_name=as.factor(scientific_name),
+         common_name=as.factor(common_name),
+         taxonomic_code=as.factor(taxonomic_code),
+         status=as.factor(status))
+```
+
+3. Are there any missing values in the data? If so, which variables contain missing values and how many are missing for each variable?
+
+```{r}
+colSums(is.na(fisheries_clean))
+```
+
+```{r}
+fisheries_clean %>% 
+  summarise(across(everything(), ~ sum(is.na(.))))
+```
+
+There are 23811 missing for continent and geo_region, 2846 missing for common_name. No other NAs. 
+
+4. How many countries are represented in the data?
+```{r}
+fisheries_clean %>% 
+  summarize(count = n_distinct(country))
+```
+
+249 (including other)
+
+5. The variables `common_name` and `taxonomic_code` both refer to species. How many unique species are represented in the data based on each of these variables? Are the numbers the same or different?
+```{r}
+fisheries_clean %>% 
+  summarize(count_name = n_distinct(common_name), count_code = n_distinct(taxonomic_code))
+
+```
+
+Taxonomic code: 3722 levels. Common name: 3390 levels. Different, since common name includes NAs.
+
+6. In 2023, what were the top five countries that had the highest overall catch?
+```{r}
+fisheries_clean %>% 
+  select(country, catch) %>% 
+  arrange(desc(catch)) %>% 
+  distinct(country) %>% 
+  head(5)
+```
+
+Peru, Japan, Chile, China, Union of Soviet Socialist Republics
+
+7. In 2023, what were the top 10 most caught species? To keep things simple, assume `common_name` is sufficient to identify species. What does `NEI` stand for in some of the common names? How might this be concerning from a fisheries management perspective?
+```{r}
+fisheries_clean %>% 
+  filter(period=="2023") %>% 
+  select(common_name, catch) %>% 
+  arrange(desc(catch)) %>% 
+  distinct(common_name) %>% 
+  head(10)
+```
+
+Top ten caught fish: Marine fishes NEI, Anchoveta(=Peruvian anchovy), Alaska pollock(=Walleye poll.), Freshwater fishes NEI, Largehead hairtail, Chilean jack mackerel, Cyprinids NEI, European pilchard(=Sardine), Pacific sardine, Japanese anchovy.
+NEI I think is not elsewhere included, which basically could be anything, including endangered species. 
+
+8. For the species that was caught the most above (not NEI), which country had the highest catch in 2023?
+```{r}
+fisheries_clean %>% 
+  filter(common_name=="Anchoveta(=Peruvian anchovy)" & period=="2023") %>% 
+  select(country, catch) %>% 
+  arrange(desc(catch)) %>% 
+  head(5)
+```
+
+Peru
+
+9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
+```{r}
+fisheries_clean %>% 
+  filter(common_name=="Anchoveta(=Peruvian anchovy)",
+         period %in% c("2013","2014","2015","2016","2017","2018","2019","2020","2021","2022","2023")) %>% 
+  ggplot(mapping=aes(x=period,y=catch))+
+  geom_boxplot()+
+  labs(title="Fishing of Peruvian anchony over last 10 years", x="Year",y="Catch")
+```
+
+Fishing of the peruvian anchovy has stayed relatively constant, with decreases in 2016, 2020, and 2023. It was highest in 2018.
+
+10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
+
+In 2016, which each continent had the highest catch rate? 
+
+```{r}
+fisheries_clean %>% 
+  filter(period=="2016") %>% 
+  ggplot(mapping=aes(x=continent,y=catch))+
+  geom_boxplot()+
+  scale_y_log10()+
+  labs(title="Catch by continent in 2016")
+
+```
+Asia, followed by Africa. They are all pretty similar in number. 
+
+## Knit and Upload
+Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
