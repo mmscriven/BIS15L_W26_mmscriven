@@ -1,6 +1,6 @@
 ---
 title: "Homework 10"
-author: "Key"
+author: "McKenzie Scriven"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -90,29 +90,62 @@ injury_by_county <- sharks %>%
 injury_by_county
 ```
 
+```{r}
+injury_by_county_two <- sharks %>% 
+  select(injury, county) %>% 
+  count(county, injury) %>% 
+  pivot_wider(names_from = injury, values_from = n)
+injury_by_county_two
+
+```
+
+
 6. Use the table from #5 to make a plot that shows the total number of incidents by county.
 ```{r}
-
+sharks %>% 
+  select(injury, county) %>% 
+  count(county, injury) %>% 
+  ggplot(aes(x=county,y=n))+
+  geom_col()+
+  coord_flip()+
+  labs(title="Incidents per county",y=NULL)
 ```
 
 7. In the data, `mode` refers to a type of activity. Which activity is associated with the highest number of incidents?
 ```{r}
-
+sharks %>% 
+  count(mode, sort=T)
 ```
+Surfing/boarding
 
 8. Make a plot that compares the number of incidents by activity.
 ```{r}
-
+sharks %>% 
+  count(mode, sort=T) %>% 
+  ggplot(aes(x=mode,y=n))+
+  geom_col()+
+  coord_flip()+
+  labs(title="Incidents by activity",x=NULL,y=NULL)
 ```
 
 9. Which shark species is involved in the highest number of incidents?  
 ```{r}
-
+sharks %>% 
+  count(species, sort=T)
 ```
+
+White.
 
 10. Are all incidents involving Great White's fatal? Make a plot that shows the number and types of incidents for Great White's only.  
 ```{r}
-
+sharks %>% 
+  select(species,injury) %>% 
+  filter(species=="White") %>% 
+  count(injury, sort=T) %>% 
+  ggplot(aes(x=injury,y=n))+
+  geom_col()+
+  coord_flip()+
+  labs(title="Severity of great white shark attacks",x="Severity of injury",y=NULL)
 ```
 
 ## Knit and Upload
