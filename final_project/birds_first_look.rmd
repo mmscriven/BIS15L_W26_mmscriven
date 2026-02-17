@@ -1,0 +1,43 @@
+---
+title: "birds"
+output: html_document
+date: "2026-02-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+library("tidyverse")
+```
+
+
+```{r}
+collisions_migration_weather_spring_fall_dataset <- read.csv("collisions_migration_weather_spring_fall_dataset.csv")
+```
+
+```{r}
+collisions_no_scaled <- collisions_migration_weather_spring_fall_dataset %>% 
+  select(!(starts_with("scaled")))
+```
+
+```{r}
+collisions_date_sep <- collisions_no_scaled %>% 
+  separate(col="date", into = c("month","day","year"), sep = "/") %>% 
+  select(!day) %>% 
+  mutate(month=as.factor(month))
+```
+
+```{r}
+collisions_date_sep %>% 
+  ggplot(aes(x=month,y=count))+
+  geom_boxplot()+
+  coord_cartesian(y=c(0,30))
+```
+
