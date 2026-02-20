@@ -58,12 +58,18 @@ amniota %>%
   gg_miss_var()
 ```
 
+Subspecies, female body mass at maturity, and female svl at matury are the highest number of nas, although many of the columns have a similarly high number. 
+
 6. Calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?
 
 ```{r}
-
+amniota %>% 
+  select(egg_mass_g, class) %>% 
+  group_by(class) %>% 
+  miss_var_summary()
 ```
 
+Mammalia should be 100% nas because they don't lay eggs. Aves is weirdly high at 50%, reptilia is also weirdly high since a majority of reptiles lay eggs. 
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean! 
