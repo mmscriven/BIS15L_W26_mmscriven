@@ -23,7 +23,7 @@ library(leaflet)
 
 ## API Key
 ```{r}
-register_stadiamaps("7c5da2c8-6437-489e-b0e1-b3414bcb3b96", write = FALSE)
+register_stadiamaps("", write = FALSE)
 ```
 
 ## Load the Data
