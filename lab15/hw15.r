@@ -8,7 +8,7 @@ elephants <- read_csv("data/elephants_data/elephants.csv") %>%
 
 ui <- dashboardPage(
   
-  dashboardHeader(title="Age and Height of elephants by sex"),
+  dashboardHeader(title="Elephant stats"),
   
   dashboardSidebar(
     
