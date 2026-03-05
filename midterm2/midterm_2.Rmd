@@ -33,7 +33,7 @@ library(shiny)
 ## API Key
 Since you will build a map as part of the exam, take a moment to register your API key. You may need to look up your [stadia maps](https://client.stadiamaps.com/dashboard/overview) API key online (please do that now).
 ```{r}
-register_stadiamaps("7c5da2c8-6437-489e-b0e1-b3414bcb3b96", write = FALSE)
+register_stadiamaps("", write = FALSE)
 ```
 
 ## About the data
