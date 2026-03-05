@@ -76,7 +76,7 @@ There are five main types of BLAST, each designed for a specific combination of 
 
 2. Click the appropriate Nucleotide Blast (blastn)
 
-3. Select the folder that contains our query sequence, **unknown_genome_02.txt** or paste the sequence in the **Enter Query Sequence** text box. 
+3. Select the folder that contains our query sequence, **unknown_genome_01.txt** or paste the sequence in the **Enter Query Sequence** text box. 
 
 4. Under **"Database"**, make sure it is set for **core nucleotide database(core_nt)**. Optimize for "Highly similar sequences (megablast)".Under "Algorithm parameters", set the "Max target sequences" to 50.
 
@@ -92,29 +92,41 @@ There are five main types of BLAST, each designed for a specific combination of 
    
 7. Check the **Select All** box. Click on Download and select the **Alginment Descrptions CSV**. Download the results in CSV format. Using the command line move the file into your "data/blast_results" folder and rename the file to "genome01_blastn.csv".
 ```{}
+cd Desktop/
+   54  mv UKWF79ZK016-Alignment-Descriptions.csv genome01_blastn.csv
+   55  ls
+   56  mv ../
+   57  mv genome01_blastn.csv ../Documents/GitHub/BIS15L_W26_mmscriven/lab16/data/blast_results/
+   58  cd ../
+   59  ls Documents/GitHub/BIS15L_W26_mmscriven/lab16/data/
+   60  ls Documents/GitHub/BIS15L_W26_mmscriven/lab16/data/blast_results/
 
 ```
-
-
    
 Load the blast search results into R. 
 ```{r}
+genome01_blastn <- read.csv("data/blast_results/genome01_blastn.csv") %>% clean_names()
 
 ```
 
 ```{r}
+glimpse(genome01_blastn)
 
 ```
 
 What was the top 5 hits for your blast search ? 
 ```{r}
-
+genome01_blastn %>% 
+  head(n=5)
 ```
 
 
 Which hit had the highest e-value?**(include the description, taxid, e_value, and link to the accession number for this hit)**
 ```{r}
-
+genome01_blastn %>% 
+  select(description, e_value, accession) %>% 
+  arrange(desc(e_value)) %>% 
+  slice_head(n=1)
 ```
 
 ### View Fasta Files in R
@@ -124,7 +136,7 @@ Which hit had the highest e-value?**(include the description, taxid, e_value, an
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
-#BiocManager::install("Biostrings")
+BiocManager::install("Biostrings")
 ```
 
 
@@ -135,21 +147,25 @@ library(Biostrings)
 
 Lets take a look at a dna fasta file
 ```{r}
-
+dna_file <- readDNAStringSet("data/e.coli_genbank.fasta")
 ```
 
 Lets look at the head of the fasta file
 ```{r}
-
+head(dna_file)
 ```
 
 Lets take a look at a amino acid fasta file
 ```{r}
-
+names(dna_file)
 ```
 
 ```{r}
+aa_file <- readAAStringSet("data/e.coli_cds.fasta")
+```
 
+```{r}
+names(aa_file)
 ```
 
 Lets try Protein Blast (blastp). *(use unknown_aminoaacid_sequence.txt as the query and the "RefSeq Protein" `refseq_protein` database, use the blastp Algorithm)*.
@@ -159,16 +175,29 @@ Lets try Protein Blast (blastp). *(use unknown_aminoaacid_sequence.txt as the qu
 
 ## Practice *(if time allows)*
 1.Download the **Description Table** in CSV format, change the name to "blastp_results.csv" using command line and store the results in the "blast_results" folder. What commands did you use to change the name and move the file into the blast_results folder?
-```{}
-
+```{bash}
+scc2102-04:~ mmscrive$ ls Desktop/
+UKXUYKW0014-Alignment-Descriptions.csv
+scc2102-04:~ mmscrive$ mv Desktop/UKXUYKW0014-Alignment-Descriptions.csv blastp_results.csv
+scc2102-04:~ mmscrive$ ls Desktop/
+scc2102-04:~ mmscrive$ ls
+blastp_results.csv	Downloads		Music
+Desktop			Library			Pictures
+Documents		Movies			Public
+scc2102-04:~ mmscrive$ mv blastp_results.csv Documents/GitHub/BIS15L_W26_mmscriven/lab16/data/blast_results/
+scc2102-04:~ mmscrive$ ls Documents/GitHub/BIS15L_W26_mmscriven/lab16/data/blast_results/
+blastp_results.csv	genome01_blastn.csv
 ```
 
 2. Read the csv file into R and clean the column names. Save the cleaned data frame as `blastp_results`.
 
 ```{r}
-
+blastp_results <- read.csv("data/blast_results/blastp_results.csv") %>% clean_names()
 ```
 
+```{r}
+
+```
 
 3. Now try tblastn with the same query and database, use the core nucleotide database (core_nt) database? Download the **Description Table** in CSV format, change the name to "tblastn_results.csv" using command line and store the results in the "blast_results" folder. What commands did you use to change the name and move the file into the blast_results folder?
 
