@@ -1,0 +1,16 @@
+Accession	Begin	End	Chromosome	Orientation	Name	Symbol	Gene ID	Gene Type	Transcripts accession	Protein accession	Protein length	Locus tag
+CP166963.1	1	1389		plus	chromosomal replication initiator protein DnaA	dnaA	0	protein-coding		XEO54403.1	462	ACBZ63_00005
+CP166963.1	1394	2494		plus	DNA polymerase III subunit beta	dnaN	0	protein-coding		XEO54404.1	366	ACBZ63_00010
+CP166963.1	2667	3752		plus	DNA replication/repair protein RecF	recF	0	protein-coding		XEO54406.1	361	ACBZ63_00020
+CP166963.1	3772	6186		plus	DNA topoisomerase (ATP-hydrolyzing) subunit B	gyrB	0	protein-coding		XEO54407.1	804	ACBZ63_00025
+CP166963.1	6402	7211		plus	sugar-phosphatase	yidA	0	protein-coding		XEO54408.1	269	ACBZ63_00030
+CP166963.1	7602	8956		minus	IS3-like element IS1661 family transposase		0	protein-coding		XEO54409.1	451	ACBZ63_00035
+CP166963.1	9163	10116		minus	ornithine cyclodeaminase family protein		0	protein-coding		XEO54410.1	317	ACBZ63_00040
+CP166963.1	10110	11072		minus	threonine/serine dehydratase		0	protein-coding		XEO54411.1	320	ACBZ63_00045
+CP166963.1	11280	11895		plus	uncharacterized gene		0	pseudogene				ACBZ63_00050
+CP166963.1	11935	12273		minus	YceK/YidQ family lipoprotein		0	protein-coding		XEO54412.1	112	ACBZ63_00055
+CP166963.1	12641	13054		plus	small heat shock chaperone IbpA	ibpA	0	protein-coding		XEO54413.1	137	ACBZ63_00060
+CP166963.1	13335	13799		plus	small heat shock chaperone IbpB	ibpB	0	protein-coding		XEO54414.1	154	ACBZ63_00065
+CP166963.1	14172	15830		plus	putative transporter		0	protein-coding		XEO54415.1	552	ACBZ63_00070
+CP166963.1	15943	17208		minus	valine--pyruvate transaminase		0	protein-coding		XEO54416.1	421	ACBZ63_00075
+CP166963.1	17663	18106		minus	hypothetical protein		0	protein-coding		XEO54417.1	147	ACBZ63_00080

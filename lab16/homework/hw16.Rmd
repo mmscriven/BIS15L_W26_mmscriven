@@ -21,7 +21,7 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 ### Install Biostrings
 ```{r,bquiet=TRUE, message=FALSE, warning=FALSE}
 #if (!requireNamespace("BiocManager", quietly = TRUE))
-#  install.packages("BiocManager")
+  #install.packages("BiocManager")
 
 #BiocManager::install("Biostrings")
 ```
@@ -43,6 +43,8 @@ options(scipen = 999)
 A patient has been admitted to the hospital with a severe and rapidly progressing bacterial infection of unknown origin. Standard clinical cultures have been inconclusive. As part of the diagnostic workup, RNA was extracted directly from the patient's tissue sample and submitted for RNA sequencing (RNA-seq). From this sequencing data, you have successfully assembled the complete coding sequence of a gene expressed by the infecting bacterium.
 You will use BLAST, a tool used in real clinical and research microbiology labs, to compare this unknown sequence against all known biological sequences in the NCBI database.
 
+**SKIP #1**
+
 **1. Read the "gene of interest" sequence from the `goi_01.txt` file into R using the Biostrings package. Store this in an object called `query_seq`.What type sequence is this? (DNA, RNA or Protien) **
 ```{r}
 
@@ -53,64 +55,79 @@ You will use BLAST, a tool used in real clinical and research microbiology labs,
 ```
 
 
-**2.Perform a blastx search using `goi_01.txt` as the query and the "core_nt" database. Download the cluster table results in CSV format, change the name to "goi_01_blastx.csv" and store in the homework/data folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastx.**
+**2.Perform a blastx search using `goi_01.txt` as the query and the "nr_cluster_seq" database. Download the cluter table results in CSV format, change the name to "goi_01_blastx.csv" in the homework folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastx.**
 ```{r}
-
+goi_01_blastx <- read.csv("data/goi_01_blastx.csv") %>% clean_names()
 ```
 
 ```{r}
-
+glimpse(goi_01_blastx)
 ```
 
 **3.Display the top 10 blastx hits, based on e_value, for this blastx search? (Include the Scientific Name, Cluster Anscestor, Cluster Representative Sequence, Max Score, Query Cover, E value and Percent Identity)**
 ```{r}
-
+goi_01_blastx %>% 
+  select(scientific_name, cluster_ancestor, representative_sequence, max_score, query_cover, e_value, per_ident) %>% 
+  arrange(e_value) %>% 
+  head(10)
 ```
  
 
 **4. create a plot that shows the different in percent identity for each Scientific Name of the top 10 blastx hits. Make sure to label your axes and give your plot a title.**
 ```{r}
-
+goi_01_blastx %>% 
+  select(scientific_name, cluster_ancestor, representative_sequence, max_score, query_cover, e_value, per_ident) %>% 
+  arrange(e_value) %>% 
+  head(10) %>% 
+  ggplot(aes(x=scientific_name, y=per_ident, fill=scientific_name))+
+  geom_col()+
+  coord_flip()+
+  theme_classic()+
+  labs(x="Scientific Name", y="Percent Identity", title="Top ten blastx hits percent identity")
 ```
 
 
-**5 Perform a blastn search using `goi_01.txt` as the query and the "core_nt" database. Download the alignment description in CSV format, change the name to "goi_01_blastn.csv" and store in the homework/data folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastn.**
+**5 Perform a blastn search using `goi_01.txt` as the query and the "core_nt" database. Download the alignment description in CSV format, change the name to "goi_01_blastn.csv" in the homework folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastn.**
 ```{r}
-
+goi_01_blastn <- read.csv("data/goi_01_blastn.csv") %>% clean_names()
 ```
 
 ```{r}
-
+glimpse(goi_01_blastn)
 ```
 
-**6. What was the top blastn hit, based on e_value, for this blastn search? (Include the Cluster Ancestor, Cluster, Representative Sequence, Max Score, Query Cover, E value, Percent Identity and Accession Link)**
+**6. What was the top blastn hit, based on e_value, for this blastn search? (Include the Cluster Ancestor, Cluster Representative Sequence, Max Score, Query Cover, E value, Percent Identity and Accession Link)**
 ```{r}
+goi_01_blastn %>% 
+  select(max_score, query_cover, e_value, per_ident, accession) %>% 
+  arrange(e_value) %>% 
+  head(1)
 
 ```
 
 **7. Based on the blastx and blastn results, what do you think this gene is and what bacteria do you think it came from?**
 ```{}
-
+minor capsid protein, Yersinia pestis
 ```
 
 **8. For the top blastn hit, click on the accession link for this bacteria and download the coding sequences as a FASTA Protein file. Read the fasta file into R using the Biostrings package and store it in an object called `goi_blastn_hit`.**
 ```{r}
-
+goi_blastn_hit <- readDNAStringSet("data/sequence.fasta")
 ```
 
 ```{r}
-
+(goi_blastn_hit)
 ```
 
 **9. From the same organism, identify 5 other annotated genes? Do these genes suggest about the biology or virulence of this bacterium?** *Annotated genes can be found in the "CDS" section of the GenBank file. You can also find genes by going to summary page for the organism and looking at the "View annotated genes" section.*
 ```{r}
-
+read_tsv("data/ncbi_dataset.tsv")
 ```
 
 
 **10. Now that you have an idea of this bacteria's identity, what illness/disease do you think the patient has? What is the historical or public health significance of this disease? Based on the gene you identified, what role might this gene play in pathogenicity?**
 ```{}
-
+I believe the patient has the black plague, caused by Yersinia pestis. Untreated, its mortality rate is very high, but treated with antibiotics it is relatively low. It is quite contagious, and killed almost half of Europe's population in the 1300s. Minor capsid proteins, the protein I identified, are very important in infection mechanisms. Minor capsid proteins are proteins that would be a possible target for a universal vaccine. 
 ```
 
 
